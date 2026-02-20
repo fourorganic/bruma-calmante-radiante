@@ -5,6 +5,39 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import productImage from "@/assets/product-isolated.png";
 import curcumaImage from "@/assets/curcuma-isolated.png";
 
+interface SlideTheme {
+  bg: string;
+  tagline: string;
+  checkIcon: string;
+  ctaPrimary: string;
+  ctaSecondaryBorder: string;
+  ctaSecondaryText: string;
+  ctaSecondaryHover: string;
+  dotActive: string;
+}
+
+const defaultTheme: SlideTheme = {
+  bg: "gradient-hero",
+  tagline: "text-primary",
+  checkIcon: "text-primary",
+  ctaPrimary: "gradient-cta",
+  ctaSecondaryBorder: "border-primary",
+  ctaSecondaryText: "text-primary",
+  ctaSecondaryHover: "hover:bg-primary hover:text-primary-foreground",
+  dotActive: "bg-primary",
+};
+
+const curcumaTheme: SlideTheme = {
+  bg: "gradient-curcuma",
+  tagline: "text-orange-600",
+  checkIcon: "text-orange-500",
+  ctaPrimary: "gradient-cta-curcuma",
+  ctaSecondaryBorder: "border-orange-500",
+  ctaSecondaryText: "text-orange-600",
+  ctaSecondaryHover: "hover:bg-orange-500 hover:text-white",
+  dotActive: "bg-orange-500",
+};
+
 interface Slide {
   id: number;
   tagline: string;
@@ -16,6 +49,7 @@ interface Slide {
   image: string;
   imageAlt: string;
   glowColor: string;
+  theme: SlideTheme;
 }
 
 const slides: Slide[] = [
@@ -34,6 +68,7 @@ const slides: Slide[] = [
     image: productImage,
     imageAlt: "Producto Fourmidable - Bruma Facial",
     glowColor: "bg-primary/20",
+    theme: defaultTheme,
   },
   {
     id: 2,
@@ -50,6 +85,7 @@ const slides: Slide[] = [
     image: productImage,
     imageAlt: "Bruma Facial Calmante Fourmidable con Ácido Hipocloroso",
     glowColor: "bg-sky-medium/30",
+    theme: defaultTheme,
   },
   {
     id: 3,
@@ -65,6 +101,7 @@ const slides: Slide[] = [
     image: curcumaImage,
     imageAlt: "Cúrcuma Hidrosoluble Fourmidable",
     glowColor: "bg-orange-300/30",
+    theme: curcumaTheme,
   },
 ];
 
@@ -103,7 +140,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="gradient-hero min-h-screen flex items-center relative overflow-hidden">
+    <section className={`${slide.theme.bg} min-h-screen flex items-center relative overflow-hidden transition-colors duration-500`}>
       <div className="container mx-auto px-4 md:px-8 py-12 md:py-20">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
@@ -118,7 +155,7 @@ const HeroSection = () => {
           >
             {/* Content */}
             <div className="order-2 lg:order-1 text-center lg:text-left">
-              <p className="text-sm font-medium tracking-widest text-primary uppercase mb-4">
+              <p className={`text-sm font-medium tracking-widest ${slide.theme.tagline} uppercase mb-4`}>
                 {slide.tagline}
               </p>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-semibold text-foreground leading-tight mb-6 text-balance">
@@ -135,7 +172,7 @@ const HeroSection = () => {
                     key={bullet}
                     className="inline-flex items-center gap-2 text-sm text-foreground/80 bg-card px-4 py-2 rounded-full shadow-sm border border-border"
                   >
-                    <svg className="w-4 h-4 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className={`w-4 h-4 ${slide.theme.checkIcon} flex-shrink-0`} fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                     {bullet}
@@ -146,13 +183,13 @@ const HeroSection = () => {
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" className="gradient-cta text-primary-foreground font-medium text-lg px-8 py-6 rounded-full shadow-lg hover:opacity-90 transition-opacity">
+                  <Button size="lg" className={`${slide.theme.ctaPrimary} text-primary-foreground font-medium text-lg px-8 py-6 rounded-full shadow-lg hover:opacity-90 transition-opacity`}>
                     {slide.ctaPrimary.label}
                   </Button>
                 </motion.div>
                 {slide.ctaSecondary && (
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                    <Button variant="outline" size="lg" className="font-medium text-lg px-8 py-6 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
+                    <Button variant="outline" size="lg" className={`font-medium text-lg px-8 py-6 rounded-full border-2 ${slide.theme.ctaSecondaryBorder} ${slide.theme.ctaSecondaryText} ${slide.theme.ctaSecondaryHover} transition-colors`}>
                       {slide.ctaSecondary.label}
                     </Button>
                   </motion.div>
@@ -188,7 +225,7 @@ const HeroSection = () => {
                 key={i}
                 onClick={() => goTo(i)}
                 className={`h-2.5 rounded-full transition-all duration-300 ${
-                  i === current ? "w-8 bg-primary" : "w-2.5 bg-border hover:bg-muted-foreground"
+                  i === current ? `w-8 ${slides[i].theme.dotActive}` : "w-2.5 bg-border hover:bg-muted-foreground"
                 }`}
                 aria-label={`Ir a slide ${i + 1}`}
               />
